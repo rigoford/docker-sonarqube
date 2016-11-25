@@ -43,7 +43,13 @@ RUN curl -o $SONARQUBE_PLUGINS/sonar-dependency-check-plugin.jar -fSL \
     && curl -o $SONARQUBE_PLUGINS/sonar-xml-plugin.jar -fSL \
          http://sonarsource.bintray.com/Distribution/sonar-xml-plugin/sonar-xml-plugin-$SONAR_XML_PLUGIN_VERSION.jar
 
-COPY files/run.sh $SONARQUBE_HOME/bin/
+RUN mkdir -p /tmp \
+    && curl -o /tmp/newrelic-java.zip -fSL \
+         https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip \
+    && unzip /tmp/newrelic-java.zip newrelic/newrelic.jar -d $SONARQUBE_HOME/lib \
+    && rm /tmp/newrelic-java.zip
+
+COPY files/run.sh $SONARQUBE_HOME/bin
 
 RUN addgroup $SONAR_USER \
     && adduser -h $SONARQUBE_HOME -s /bin/sh -D -G $SONAR_USER -H $SONAR_USER \
