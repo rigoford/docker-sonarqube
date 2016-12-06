@@ -23,25 +23,31 @@ RUN apk add --no-cache curl unzip \
     && mv /opt/sonarqube-$SONAR_VERSION $SONARQUBE_HOME \
     && rm /tmp/sonarqube.zip
 
+ARG SONAR_DEPENDENCY_CHECK_PLUGIN=sonar-dependency-check-plugin
 ARG SONAR_DEPENDENCY_CHECK_PLUGIN_VERSION=1.0.2
+ARG SONAR_GIT_PLUGIN=sonar-scm-git-plugin
 ARG SONAR_GIT_PLUGIN_VERSION=1.2
+ARG SONAR_JAVA_PLUGIN=sonar-java-plugin
 ARG SONAR_JAVA_PLUGIN_VERSION=4.2.1.6971
+ARG SONAR_JAVASCRIPT_PLUGIN=sonar-javascript-plugin
 ARG SONAR_JAVASCRIPT_PLUGIN_VERSION=2.18.0.3454
+ARG SONAR_LDAP_PLUGIN=sonar-ldap-plugin
 ARG SONAR_LDAP_PLUGIN_VERSION=2.1.0.507
+ARG SONAR_XML_PLUGIN=sonar-xml-plugin
 ARG SONAR_XML_PLUGIN_VERSION=1.4.1
 
-RUN curl -o $SONARQUBE_PLUGINS/sonar-dependency-check-plugin.jar -fSL \
-      https://github.com/stevespringett/dependency-check-sonar-plugin/releases/download/sonar-dependency-check-$SONAR_DEPENDENCY_CHECK_PLUGIN_VERSION/sonar-dependency-check-plugin-$SONAR_DEPENDENCY_CHECK_PLUGIN_VERSION.jar \
-    && curl -o $SONARQUBE_PLUGINS/sonar-git-plugin.jar -fSL \
-         https://sonarsource.bintray.com/Distribution/sonar-scm-git-plugin/sonar-scm-git-plugin-$SONAR_GIT_PLUGIN_VERSION.jar \
-    && curl -o $SONARQUBE_PLUGINS/sonar-java-plugin.jar -fSL \
-         https://sonarsource.bintray.com/Distribution/sonar-java-plugin/sonar-java-plugin-$SONAR_JAVA_PLUGIN_VERSION.jar \
-    && curl -o $SONARQUBE_PLUGINS/sonar-javascript-plugin.jar -fSL \
-         https://sonarsource.bintray.com/Distribution/sonar-javascript-plugin/sonar-javascript-plugin-$SONAR_JAVASCRIPT_PLUGIN_VERSION.jar \
-    && curl -o $SONARQUBE_PLUGINS/sonar-ldap-plugin.jar -fSL \
-         https://sonarsource.bintray.com/Distribution/sonar-ldap-plugin/sonar-ldap-plugin-$SONAR_LDAP_PLUGIN_VERSION.jar \
-    && curl -o $SONARQUBE_PLUGINS/sonar-xml-plugin.jar -fSL \
-         http://sonarsource.bintray.com/Distribution/sonar-xml-plugin/sonar-xml-plugin-$SONAR_XML_PLUGIN_VERSION.jar
+RUN curl -o $SONARQUBE_PLUGINS/$SONAR_DEPENDENCY_CHECK_PLUGIN-$SONAR_DEPENDENCY_CHECK_PLUGIN_VERSION.jar -fSL \
+      https://github.com/stevespringett/dependency-check-sonar-plugin/releases/download/sonar-dependency-check-$SONAR_DEPENDENCY_CHECK_PLUGIN_VERSION/$SONAR_DEPENDENCY_CHECK_PLUGIN-$SONAR_DEPENDENCY_CHECK_PLUGIN_VERSION.jar \
+    && curl -o $SONARQUBE_PLUGINS/$SONAR_GIT_PLUGIN-$SONAR_GIT_PLUGIN_VERSION.jar -fSL \
+         https://sonarsource.bintray.com/Distribution/$SONAR_GIT_PLUGIN/$SONAR_GIT_PLUGIN-$SONAR_GIT_PLUGIN_VERSION.jar \
+    && curl -o $SONARQUBE_PLUGINS/$SONAR_JAVA_PLUGIN-$SONAR_JAVA_PLUGIN_VERSION.jar -fSL \
+         https://sonarsource.bintray.com/Distribution/$SONAR_JAVA_PLUGIN/$SONAR_JAVA_PLUGIN-$SONAR_JAVA_PLUGIN_VERSION.jar \
+    && curl -o $SONARQUBE_PLUGINS/$SONAR_JAVASCRIPT_PLUGIN-$SONAR_JAVASCRIPT_PLUGIN_VERSION.jar -fSL \
+         https://sonarsource.bintray.com/Distribution/$SONAR_JAVASCRIPT_PLUGIN/$SONAR_JAVASCRIPT_PLUGIN-$SONAR_JAVASCRIPT_PLUGIN_VERSION.jar \
+    && curl -o $SONARQUBE_PLUGINS/$SONAR_LDAP_PLUGIN-$SONAR_LDAP_PLUGIN_VERSION.jar -fSL \
+         https://sonarsource.bintray.com/Distribution/$SONAR_LDAP_PLUGIN/$SONAR_LDAP_PLUGIN-$SONAR_LDAP_PLUGIN_VERSION.jar \
+    && curl -o $SONARQUBE_PLUGINS/$SONAR_XML_PLUGIN-$SONAR_XML_PLUGIN_VERSION.jar -fSL \
+         http://sonarsource.bintray.com/Distribution/$SONAR_XML_PLUGIN/$SONAR_XML_PLUGIN-$SONAR_XML_PLUGIN_VERSION.jar
 
 RUN mkdir -p /tmp \
     && curl -o /tmp/newrelic-java.zip -fSL \
