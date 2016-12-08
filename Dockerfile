@@ -1,4 +1,4 @@
-FROM java:8-alpine
+FROM rigoford/alpine-java-newrelic:3.33.0
 
 MAINTAINER Martin Ford <ford.j.martin@gmail.com>
 
@@ -8,20 +8,6 @@ ARG SONARQUBE_HOME=/opt/sonarqube
 ARG SONARQUBE_DATA=$SONARQUBE_HOME/data
 ARG SONARQUBE_EXTENSIONS=$SONARQUBE_HOME/extensions
 ARG SONARQUBE_PLUGINS=$SONARQUBE_EXTENSIONS/plugins
-
-ENV SONAR_VERSION=$SONAR_VERSION \
-    SONARQUBE_HOME=$SONARQUBE_HOME \
-    SONARQUBE_JDBC_USERNAME=sonar \
-    SONARQUBE_JDBC_PASSWORD=sonar \
-    SONARQUBE_JDBC_URL=
-
-RUN apk add --no-cache curl unzip && \
-    mkdir -p /tmp && \
-    curl -o /tmp/sonarqube.zip -fSL \
-      https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-$SONAR_VERSION.zip && \
-    unzip /tmp/sonarqube.zip -d /opt && \
-    mv /opt/sonarqube-$SONAR_VERSION $SONARQUBE_HOME && \
-    rm /tmp/sonarqube.zip
 
 ARG SONAR_CHECKSTYLE_PLUGIN=sonar-checkstyle-plugin
 ARG SONAR_CHECKSTYLE_PLUGIN_VERSION=2.4
@@ -40,7 +26,20 @@ ARG SONAR_LDAP_PLUGIN_VERSION=2.1.0.507
 ARG SONAR_XML_PLUGIN=sonar-xml-plugin
 ARG SONAR_XML_PLUGIN_VERSION=1.4.1
 
-RUN curl -o $SONARQUBE_PLUGINS/$SONAR_CHECKSTYLE_PLUGIN-$SONAR_CHECKSTYLE_PLUGIN_VERSION.jar -fSL \
+ENV SONAR_VERSION=$SONAR_VERSION \
+    SONARQUBE_HOME=$SONARQUBE_HOME \
+    SONARQUBE_JDBC_USERNAME=sonar \
+    SONARQUBE_JDBC_PASSWORD=sonar \
+    SONARQUBE_JDBC_URL=
+
+RUN apk --no-cache add curl unzip && \
+    mkdir -p /tmp && \
+    curl -o /tmp/sonarqube.zip -fSL \
+      https://sonarsource.bintray.com/Distribution/sonarqube/sonarqube-$SONAR_VERSION.zip && \
+    unzip /tmp/sonarqube.zip -d /opt && \
+    mv /opt/sonarqube-$SONAR_VERSION $SONARQUBE_HOME && \
+    rm /tmp/sonarqube.zip && \
+    curl -o $SONARQUBE_PLUGINS/$SONAR_CHECKSTYLE_PLUGIN-$SONAR_CHECKSTYLE_PLUGIN_VERSION.jar -fSL \
       https://sonarsource.bintray.com/Distribution/$SONAR_CHECKSTYLE_PLUGIN/$SONAR_CHECKSTYLE_PLUGIN-$SONAR_CHECKSTYLE_PLUGIN_VERSION.jar && \
     curl -o $SONARQUBE_PLUGINS/$SONAR_DEPENDENCY_CHECK_PLUGIN-$SONAR_DEPENDENCY_CHECK_PLUGIN_VERSION.jar -fSL \
       https://github.com/stevespringett/dependency-check-sonar-plugin/releases/download/sonar-dependency-check-$SONAR_DEPENDENCY_CHECK_PLUGIN_VERSION/$SONAR_DEPENDENCY_CHECK_PLUGIN-$SONAR_DEPENDENCY_CHECK_PLUGIN_VERSION.jar && \
@@ -55,13 +54,8 @@ RUN curl -o $SONARQUBE_PLUGINS/$SONAR_CHECKSTYLE_PLUGIN-$SONAR_CHECKSTYLE_PLUGIN
     curl -o $SONARQUBE_PLUGINS/$SONAR_LDAP_PLUGIN-$SONAR_LDAP_PLUGIN_VERSION.jar -fSL \
       https://sonarsource.bintray.com/Distribution/$SONAR_LDAP_PLUGIN/$SONAR_LDAP_PLUGIN-$SONAR_LDAP_PLUGIN_VERSION.jar && \
     curl -o $SONARQUBE_PLUGINS/$SONAR_XML_PLUGIN-$SONAR_XML_PLUGIN_VERSION.jar -fSL \
-      http://sonarsource.bintray.com/Distribution/$SONAR_XML_PLUGIN/$SONAR_XML_PLUGIN-$SONAR_XML_PLUGIN_VERSION.jar
-
-RUN mkdir -p /tmp && \
-    curl -o /tmp/newrelic-java.zip -fSL \
-      https://download.newrelic.com/newrelic/java-agent/newrelic-agent/current/newrelic-java.zip && \
-    unzip /tmp/newrelic-java.zip newrelic/newrelic.jar -d $SONARQUBE_HOME/lib && \
-    rm /tmp/newrelic-java.zip
+      http://sonarsource.bintray.com/Distribution/$SONAR_XML_PLUGIN/$SONAR_XML_PLUGIN-$SONAR_XML_PLUGIN_VERSION.jar && \
+    apk del curl unzip
 
 COPY files/run.sh $SONARQUBE_HOME/bin
 
