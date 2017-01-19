@@ -1,4 +1,4 @@
-FROM rigoford/alpine-java-newrelic:3.33.0
+FROM rigoford/alpine-java-newrelic:3.33.0.1
 
 MAINTAINER Martin Ford <ford.j.martin@gmail.com>
 
