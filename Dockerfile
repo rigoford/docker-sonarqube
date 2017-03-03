@@ -33,6 +33,9 @@ ARG SONAR_PMD_PLUGIN_VERSION=2.6
 ARG SONAR_XML_PLUGIN=sonar-xml-plugin
 ARG SONAR_XML_PLUGIN_VERSION=1.4.1
 
+ARG SONAR_JAVA_RULES=sonar-java-rules
+ARG SONAR_JAVA_RULES_VERSION=0.3.0
+
 ENV SONAR_VERSION=$SONAR_VERSION \
     SONARQUBE_HOME=$SONARQUBE_HOME \
     SONARQUBE_JDBC_USERNAME=sonar \
@@ -68,6 +71,8 @@ RUN apk --no-cache add curl unzip && \
       https://github.com/SonarQubeCommunity/sonar-pmd/releases/download/$SONAR_PMD_PLUGIN_VERSION/$SONAR_PMD_PLUGIN-$SONAR_PMD_PLUGIN_VERSION.jar && \
     curl -o $SONARQUBE_PLUGINS/$SONAR_XML_PLUGIN-$SONAR_XML_PLUGIN_VERSION.jar -fSL \
       http://sonarsource.bintray.com/Distribution/$SONAR_XML_PLUGIN/$SONAR_XML_PLUGIN-$SONAR_XML_PLUGIN_VERSION.jar && \
+    curl -o $SONARQUBE_PLUGINS/$SONAR_JAVA_RULES-$SONAR_JAVA_RULES_VERSION.jar -fSL \
+      https://oss.sonatype.org/content/repositories/releases/com/github/rigoford/$SONAR_JAVA_RULES/$SONAR_JAVA_RULES/$SONAR_JAVA_RULES-$SONAR_JAVA_RULES_VERSION.jar && \
     apk del curl unzip
 
 COPY files/run.sh $SONARQUBE_HOME/bin
