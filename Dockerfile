@@ -3,7 +3,7 @@ FROM rigoford/alpine-java-newrelic:3.33.0.1
 MAINTAINER Martin Ford <ford.j.martin@gmail.com>
 
 ARG SONAR_USER=sonar
-ARG SONAR_VERSION=6.5
+ARG SONAR_VERSION=6.6
 ARG SONARQUBE_HOME=/opt/sonarqube
 ARG SONARQUBE_DATA=$SONARQUBE_HOME/data
 ARG SONARQUBE_EXTENSIONS=$SONARQUBE_HOME/extensions
